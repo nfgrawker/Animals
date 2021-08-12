@@ -8,12 +8,12 @@ from utils.decorators import singleton
 
 _CONFIG_FILE_LOCATION = "config.yaml"
 
+
 @dataclass
 class ConfigData:
     """Internal representation of the Config YAML that the delegate uses."""
-    base_url:str
 
-
+    base_url: str
 
 
 @singleton
@@ -38,6 +38,9 @@ class Config:
         with open(_CONFIG_FILE_LOCATION) as data:
             config = yaml.full_load(data)
 
-        _config_schema: Schema = desert.schema(ConfigData, meta={"unknown": EXCLUDE})
+        _config_schema: Schema = desert.schema(
+            ConfigData,
+            meta={"unknown": EXCLUDE}
+        )
 
         return _config_schema.load(config)

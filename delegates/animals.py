@@ -13,6 +13,7 @@ from utils.log import Logger
 @dataclass
 class AnimalStub:
     """DTO for Animal Stubs."""
+
     id: int
     name: str
     born_at: Optional[int] = None
@@ -20,7 +21,8 @@ class AnimalStub:
 
 @dataclass
 class PageOfAnimals:
-    """DTO for a Page of Animals. """
+    """DTO for a Page of Animals."""
+
     page: int
     total_pages: int
     items: List[AnimalStub]
@@ -29,6 +31,7 @@ class PageOfAnimals:
 @dataclass
 class AnimalComplete:
     """DTO for Complete Animal Information."""
+
     id: int
     name: str
     friends: List[str]
@@ -49,7 +52,9 @@ class AnimalsDelegate:
     @bad_server
     def get_pages(self) -> int:
         """Get total page numbers as they can be different every time."""
-        response = requests.get(f"{self.config.data.base_url}/animals/v1/animals?page=0")
+        response = requests.get(
+            f"{self.config.data.base_url}/animals/v1/animals?page=0"
+        )
         response.raise_for_status()
         _schema = desert.schema(PageOfAnimals)
         _schema_response: PageOfAnimals = _schema.load(response.json())
@@ -60,7 +65,9 @@ class AnimalsDelegate:
     @bad_server
     def get_current_page(self, current_page: int) -> List[AnimalStub]:
         """Query current page and return list of Animal Stubs."""
-        response = requests.get(f"{self.config.data.base_url}/animals/v1/animals?page={current_page}")
+        response = requests.get(
+            f"{self.config.data.base_url}/animals/v1/animals?page={current_page}"
+        )
         response.raise_for_status()
         _schema = desert.schema(PageOfAnimals)
         _schema_response: PageOfAnimals = _schema.load(response.json())
@@ -86,7 +93,9 @@ class AnimalsDelegate:
         _schema = desert.schema(AnimalComplete)
         raw_animal = response.json()
         if raw_animal["born_at"] is not None:
-            raw_animal["born_at"] = str(datetime.fromtimestamp(raw_animal["born_at"] / 100))
+            raw_animal["born_at"] = str(
+                datetime.fromtimestamp(raw_animal["born_at"] / 100)
+            )
         raw_animal["friends"] = raw_animal["friends"].split(",")
         _schema_response: AnimalComplete = _schema.load(raw_animal)
 
@@ -95,13 +104,19 @@ class AnimalsDelegate:
     def expand_animal_stubs(self) -> None:
         """Get Animal info and pass to list."""
         self.log.info("Expanding stubs.")
-        self.all_animal_complete = [self.get_animal_by_id(animal.id) for animal in self.all_animal_stubs]
+        self.all_animal_complete = [
+            self.get_animal_by_id(animal.id) for animal in self.all_animal_stubs
+        ]
         self.log.info("All stubs have been expanded.")
 
     @bad_server
-    def post_list_of_complete_animals(self, list_of_animals: List[AnimalComplete]) -> None:
+    def post_list_of_complete_animals(
+        self, list_of_animals: List[AnimalComplete]
+    ) -> None:
         """Post, max 100 at a time."""
-        response = requests.post(f"{self.config.data.base_url}/animals/v1/home", json=list_of_animals)
+        response = requests.post(
+            f"{self.config.data.base_url}/animals/v1/home", json=list_of_animals
+        )
         response.raise_for_status()
         self.log.info(response.content)
 
