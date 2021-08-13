@@ -131,5 +131,5 @@ class AnimalsDelegate:
                 self.post_list_of_complete_animals(list_to_send)
                 list_to_send = []
 
-        self.log.info(f"sending {idx} of {len(self.all_animal_complete)}")
+        self.log.info(f"sending {self.all_animal_complete} of {len(self.all_animal_complete)}")
         self.post_list_of_complete_animals(list_to_send)

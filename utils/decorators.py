@@ -18,9 +18,9 @@ def bad_server(function: Callable) -> Callable:
                 result = function(*args, **kwargs)
                 return result
             except HTTPError as e:
-                log.error(f"{e} happened upon {function.__name__}, try = {current_try}")
+                log.error(f"{e} happened upon {function.__name__}, try = {current_try}, retrying.")
                 current_try += 1
-        log.error(f"failed {current_try} on {function.__name__} exiting this call.")
+        log.error(f"failed try {current_try} on {function.__name__} exiting this call.")
 
     return _function
 
