@@ -94,7 +94,7 @@ class AnimalsDelegate:
         raw_animal = response.json()
         if raw_animal["born_at"] is not None:
             raw_animal["born_at"] = str(
-                datetime.fromtimestamp(raw_animal["born_at"] / 100)
+                datetime.fromtimestamp(raw_animal["born_at"] / 100).isoformat()
             )
         raw_animal["friends"] = raw_animal["friends"].split(",")
         _schema_response: AnimalComplete = _schema.load(raw_animal)
